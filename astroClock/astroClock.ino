@@ -217,9 +217,11 @@ void printDisplay(){
   
   tft.drawRect(2,2,TFT_W-4,TFT_H-4,BLACK);
   tft.fillRect(2,2,TFT_W-5,12,DGRAY);
-  tft.setCursor(TFT_W-8/2,6);
+  tft.setCursor((TFT_W/2)-17,5);
   tft.setTextColor(WHITE);
-  tft.println("NEOWATCH");
+  tft.print("NEOWATCH    ");
+  tft.setTextColor(GREEN);
+  tft.print("*Vb");
   
   timeStampOLD = timeStamp;
 }
@@ -327,6 +329,7 @@ void loop() {
     getNEOData();
     initLocalTime();
     initTimeClient();
+    initLCD();
   }
   //RESET = digitalRead(PIN_RESET_BUTTON);
   //Serial.println ( RESET );
