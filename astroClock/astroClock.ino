@@ -106,9 +106,9 @@ void wifiConnection (){
 
 //---------------------
 void printWiFiConnMessage(){
-  tft.setCursor(1,1);
+  tft.setTextColor(BLACK,WHITE);
   tft.setTextSize(1);
-  tft.setTextColor(YELLOW,BLACK);
+  tft.setCursor(5,15);
   tft.println("If this message will keep");
   tft.println("into screen for some while");
   tft.println("use 'AstroClock' access");
@@ -116,8 +116,15 @@ void printWiFiConnMessage(){
   tft.println("If WiFi credentials have");
   tft.println("been already inserted and");
   tft.println("nothing changed, this warning");
-  tft.println("will disapperead.");
+  tft.println("will disapper.");
   tft.setTextColor(WHITE,BLACK);
+  tft.drawRect(2,2,TFT_W-4,TFT_H-4,BLACK);
+  tft.fillRect(2,2,TFT_W-5,12,DGRAY);
+  tft.setCursor((TFT_W/2)-17,5);
+  tft.setTextColor(WHITE);
+  tft.print("NEOWATCH    ");
+  tft.setTextColor(GREEN);
+  tft.print("V1");
 }
 
 //---------------------
@@ -135,8 +142,8 @@ Current date/time is get from NTP server and local configTime is set.
 */
 void initLocalTime(){  
   Serial.println("initLocalTime(): Initialization of Local Time...:");
-  const char* ntpServer = "pool.ntp.org";   //ntp server
-  const long  gmtOffset_sec = 7200;         //Greenwich offset in second (Italy)
+  const char* ntpServer = "0.it.pool.ntp.org";    //ntp server
+  const long  gmtOffset_sec = 3600;               //Greenwich offset in second (Italy)
   const int   daylightOffset_sec = 0;
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer); // datetime inizialization
   if(!getLocalTime(&timeinfo)){
@@ -221,7 +228,7 @@ void printDisplay(){
   tft.setTextColor(WHITE);
   tft.print("NEOWATCH    ");
   tft.setTextColor(GREEN);
-  tft.print("*Vb");
+  tft.print("V1");
   
   timeStampOLD = timeStamp;
 }
