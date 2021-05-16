@@ -32,18 +32,20 @@
 #define BLUE 0xF800
 #define GREEN 0x07E0
 #define RED 0x001F
-/*
+#define PIN_RESET_BUTTON 21
 #define CYAN 0xFFE0
-#define MAGENTA 0xF81F
 #define DGRAY 0x528A
 #define LGRAY 0x2945
+/*
+#define MAGENTA 0xF81F
 #define ORANGE 0xFC02
 */
 
 //===============================================================================================
 //VARIABLES DECLARATION SECTION
 //===============================================================================================
-int PIN_RESET_BUTTON = 17;  //This pin on ESP32 is used to reset the ESP32 it self and WIFI manager
+//This pin on ESP32 is used to reset the ESP32 it self and WIFI manager
+//int PIN_RESET_BUTTON = 17
 int RESET = 0;              //This variable is used to get the status (HIGH or LOW) of PIN_RESET_BUTTON. If status is HIGH, reset is executed.
 String formattedDate;       //Contains the date in formatted way as specified in string type
 
@@ -93,6 +95,7 @@ void configModeCallback (WiFiManager *myWiFiManager) {
 //no longer valid. Otherwise is using last WIFI credential to connect (they are saved into permanent memory)
 //@TODO: display message during the connection
 void wifiConnection (){
+  printWiFiConnMessage();
   wm.setAPCallback(configModeCallback);
   // try to connet, in case of failure, create the access point "ASTRO_CLOCK"
   wm.autoConnect("AstroClock");
@@ -101,6 +104,28 @@ void wifiConnection (){
   Serial.println (WiFi.SSID());
 }
 
+//---------------------
+void printWiFiConnMessage(){
+  tft.setTextColor(BLACK,WHITE);
+  tft.setTextSize(1);
+  tft.setCursor(5,15);
+  tft.println("If this message will keep");
+  tft.println("into screen for some while");
+  tft.println("use 'AstroClock' access");
+  tft.println("point to configure wifi...");
+  tft.println("If WiFi credentials have");
+  tft.println("been already inserted and");
+  tft.println("nothing changed, this warning");
+  tft.println("will disapper.");
+  tft.setTextColor(WHITE,BLACK);
+  tft.drawRect(2,2,TFT_W-4,TFT_H-4,BLACK);
+  tft.fillRect(2,2,TFT_W-5,12,DGRAY);
+  tft.setCursor((TFT_W/2)-17,5);
+  tft.setTextColor(WHITE);
+  tft.print("NEOWATCH    ");
+  tft.setTextColor(GREEN);
+  tft.print("V1");
+}
 
 //---------------------
 //Init TimeClient of ESP32 device.
@@ -117,8 +142,8 @@ Current date/time is get from NTP server and local configTime is set.
 */
 void initLocalTime(){  
   Serial.println("initLocalTime(): Initialization of Local Time...:");
-  const char* ntpServer = "pool.ntp.org";   //ntp server
-  const long  gmtOffset_sec = 7200;         //Greenwich offset in second (Italy)
+  const char* ntpServer = "0.it.pool.ntp.org";    //ntp server
+  const long  gmtOffset_sec = 3600;               //Greenwich offset in second (Italy)
   const int   daylightOffset_sec = 0;
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer); // datetime inizialization
   if(!getLocalTime(&timeinfo)){
@@ -145,7 +170,7 @@ void resetDevice(){
 void initLCD(){
   tft.init();           // Initialization of TFT display  
   tft.setRotation (7);  // Needed to keep the LCD display in landscape orientation.
-  tft.fillRect(0, 0, TFT_W, TFT_H, TFT_BLACK);
+  tft.fillRect(0, 0, TFT_W, TFT_H, WHITE);
 }
 
 //---------------------
@@ -153,50 +178,57 @@ void initLCD(){
 void printDisplay(){
   static char outstr[15];
   getLocalTime(&timeinfo);
-  tft.setCursor(1,1);
+  tft.setCursor(3,18);
   tft.setTextSize(1);
-  tft.setTextColor(GREEN,BLACK);
-  tft.println(&timeinfo, "%A, %B %d %Y");
+  tft.setTextColor(BLUE,WHITE);
+  tft.println(&timeinfo, "  %A, %d %B");
   tft.setTextSize(1);
   tft.println("");
+  tft.setTextColor(BLACK,WHITE);
+  tft.print("  ");
   tft.setTextSize(3);
-  tft.setTextColor(YELLOW,BLACK);
-  tft.println(&timeinfo, "%H:%M:%S");
+  tft.println(&timeinfo," %H:%M");
   tft.setTextSize(1);
-  tft.setTextColor(GREEN,WHITE);
   tft.println("");
-  
-  tft.setTextColor(RED);
-  tft.print ("Name: ");
-  tft.setTextColor(WHITE);
+  tft.setTextColor(BLUE);
+  tft.print ("   Name > ");
+  tft.setTextColor(BLACK);
   tft.println(NEO1name);
-  tft.setTextColor(RED);
-  tft.print ("Date: ");
-  tft.setTextColor(WHITE);
+  tft.setTextColor(BLUE);
+  tft.print ("   Date > ");
+  tft.setTextColor(BLACK);
   tft.println(NEO1date);
-  tft.setTextColor (RED);
-  tft.print("Dis:  ");
-  tft.setTextColor(WHITE);
-  dtostrf(NEO1distanceFLoat,9, 3, outstr);
+  tft.setTextColor (BLUE);
+  tft.print("   Dis  > ");
+  tft.setTextColor(BLACK);
+  dtostrf(NEO1distanceFLoat,9, 1, outstr);
   tft.print(outstr);
   tft.println(" Km");
   
   tft.println("");
 
-  tft.setTextColor(RED);
-  tft.print ("Name: ");
-  tft.setTextColor(WHITE);
+  tft.setTextColor(BLUE);
+  tft.print ("   Name > ");
+  tft.setTextColor(BLACK);
   tft.println(NEO2name);
-  tft.setTextColor(RED);
-  tft.print ("Date: ");
-  tft.setTextColor(WHITE);
+  tft.setTextColor(BLUE);
+  tft.print ("   Date > ");
+  tft.setTextColor(BLACK);
   tft.println(NEO2date);
-  tft.setTextColor (RED);
-  tft.print("Dis:  ");
-  tft.setTextColor(WHITE);
-  dtostrf(NEO2distanceFLoat,9, 3, outstr);
+  tft.setTextColor (BLUE);
+  tft.print("   Dis  > ");
+  tft.setTextColor(BLACK);
+  dtostrf(NEO2distanceFLoat,9, 1, outstr);
   tft.print(outstr);
   tft.println(" Km");
+  
+  tft.drawRect(2,2,TFT_W-4,TFT_H-4,BLACK);
+  tft.fillRect(2,2,TFT_W-5,12,DGRAY);
+  tft.setCursor((TFT_W/2)-17,5);
+  tft.setTextColor(WHITE);
+  tft.print("NEOWATCH    ");
+  tft.setTextColor(GREEN);
+  tft.print("V1");
   
   timeStampOLD = timeStamp;
 }
@@ -245,15 +277,13 @@ void getNEOData(){
     NEO1name.remove(0,1);
     NEO1name.remove(NEO1name.length()-1,NEO1name.length());
     NEO1date.remove(0,1);
-    NEO1date.remove(NEO1date.length()-1,NEO1date.length()); 
+    NEO1date.remove(12, NEO1date.length());
     NEO1distance.remove(0,1);
     NEO1distance.remove(NEO1distance.length()-1,NEO1distance.length());
     NEO1distance.trim();
     NEO1distance = NEO1distance.substring(0,6);
     NEO1distanceFLoat = NEO1distance.toFloat();
     NEO1distanceFLoat = NEO1distanceFLoat * 149597870.7; // 1 au = 149597870.7 km
-    //NEO1distance = String(NEO1distanceFLoat);
-    //NEO1distance = NEO1distance.substring(0,10);
     
     //-------
     NEO2.remove(0,1);
@@ -264,15 +294,14 @@ void getNEOData(){
     NEO2name.remove(0,1);
     NEO2name.remove(NEO2name.length()-1,NEO2name.length());
     NEO2date.remove(0,1);
-    NEO2date.remove(NEO2date.length()-1,NEO2date.length()); 
+    NEO2date.remove(12, NEO2date.length()); 
     NEO2distance.remove(0,1);
     NEO2distance.remove(NEO2distance.length()-1,NEO2distance.length());
     NEO2distance.trim();
     NEO2distance = NEO2distance.substring(0,6);
     NEO2distanceFLoat = NEO2distance.toFloat();
     NEO2distanceFLoat = NEO2distanceFLoat * 149597870.7; // 1 au = 149597870.7 km
-    //NEO2distance = String(NEO2distanceFLoat);
-    //NEO2distance = NEO2distance.substring(0,10);
+ 
   }
 }
 
@@ -282,16 +311,18 @@ void getNEOData(){
 void setup() {
   Serial.begin(115200);
   startMillis = millis();
+  digitalWrite(PIN_RESET_BUTTON, LOW);
   pinMode(PIN_RESET_BUTTON, INPUT);
   // connection to WIFI
+  initLCD(); // inizialization of LCD for display welcome wifi message
   wifiConnection();
+  initLCD(); // inizialization of LCD again for display main screen
   delay(100);
   // initialization of time client
   initLocalTime();
   initTimeClient();
   // initialization of LCD display
-  initLCD();
-  delay(100);
+  delay(1000);
   getNEOData();
 }
 
@@ -305,12 +336,14 @@ void loop() {
     getNEOData();
     initLocalTime();
     initTimeClient();
+    initLCD();
   }
   //RESET = digitalRead(PIN_RESET_BUTTON);
-  //if(RESET == HIGH) {                                 
+  //Serial.println ( RESET );
+  //if (RESET == HIGH) {                                 
   //  resetDevice();
+  //    Serial.println("qui");
   //}
-  //getDateTimeNTP();
-  delay(1000);
   printDisplay();
+  delay(1000);
 }
