@@ -1,7 +1,7 @@
 //===============================================================================================
 //INCLUDE LIBRARIES SECTION
 //===============================================================================================
-#include <TFT_eSPI.h>       // Graphics and font library for ST7735 driver chip
+#include <TFT_eSPI.h>       // Graphics and font library for ST7735 driver chip - test
 #include <SPI.h>            // To communicate with Serial Peripheral Interface
 #include <WiFi.h>           // ESP32 Core WiFi Library 
 #include <WebServer.h>      // Local DNS Server used for redirecting all requests to the configuration portal (  https://github.com/zhouhan0126/DNSServer---esp32  )
@@ -13,7 +13,7 @@
 #include <Adafruit_ST7735.h>  // LCD driver
 #include <Adafruit_GFX.h>     // LCD graphical driver
 #include <HTTPClient.h>       // Http client to get data from API on line      
-#include <ArduinoJson.h>      // Jeson library to manage JSON object (reading of data from API on line)
+#include <ArduinoJson.h>      // Jeson library to manage JSON object (reading of data from API on line) 
 #include <time.h>             // Used to manage date and time 
 
 //URL to get nea data from NASA: https://ssd-api.jpl.nasa.gov/cad.api?body=Earth&sort=date&nea=true&limit=10&fullname=true
@@ -143,7 +143,7 @@ Current date/time is get from NTP server and local configTime is set.
 void initLocalTime(){  
   Serial.println("initLocalTime(): Initialization of Local Time...:");
   const char* ntpServer = "0.it.pool.ntp.org";    //ntp server
-  const long  gmtOffset_sec = 3600;               //Greenwich offset in second (Italy)
+  const long  gmtOffset_sec = 7200;               //Greenwich offset in second (Italy)
   const int   daylightOffset_sec = 0;
   configTime(gmtOffset_sec, daylightOffset_sec, ntpServer); // datetime inizialization
   if(!getLocalTime(&timeinfo)){
