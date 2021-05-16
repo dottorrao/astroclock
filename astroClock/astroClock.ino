@@ -41,6 +41,49 @@
 #define ORANGE 0xFC02
 */
 
+/*
+//'apple' skin    
+#define RIBBON_COLOR        BLACK
+#define NEOWATCH_COLOR      WHITE
+#define VERSION_COLOR       GREEN
+#define DATE_COLOR          BLUE
+#define DATE_COLOR_BKG      WHITE
+#define TIME_COLOR          BLACK
+#define TIME_COLOR_BKG      WHITE
+#define TXT_ITEM_NEO_COLOR  BLUE
+#define TXT_VALUE_NEO_COLOR BLACK
+#define BACK_GROUD_COLOR    WHITE
+#define RIBBON_BORDER       DGRAY
+*/
+
+/*
+//'dark' skin 1
+#define RIBBON_COLOR        WHITE
+#define NEOWATCH_COLOR      BLACK
+#define VERSION_COLOR       BLUE 
+#define DATE_COLOR          WHITE
+#define DATE_COLOR_BKG      BLACK
+#define TIME_COLOR          WHITE
+#define TIME_COLOR_BKG      BLACK
+#define TXT_ITEM_NEO_COLOR  BLUE
+#define TXT_VALUE_NEO_COLOR WHITE
+#define BACK_GROUD_COLOR    BLACK
+#define RIBBON_BORDER       WHITE
+*/
+
+//'dark' skin 2
+#define RIBBON_COLOR        WHITE
+#define NEOWATCH_COLOR      BLACK
+#define VERSION_COLOR       BLUE 
+#define DATE_COLOR          WHITE
+#define DATE_COLOR_BKG      BLACK
+#define TIME_COLOR          WHITE
+#define TIME_COLOR_BKG      BLACK
+#define TXT_ITEM_NEO_COLOR  WHITE
+#define TXT_VALUE_NEO_COLOR WHITE
+#define BACK_GROUD_COLOR    BLACK
+#define RIBBON_BORDER       WHITE
+
 //===============================================================================================
 //VARIABLES DECLARATION SECTION
 //===============================================================================================
@@ -170,65 +213,66 @@ void resetDevice(){
 void initLCD(){
   tft.init();           // Initialization of TFT display  
   tft.setRotation (7);  // Needed to keep the LCD display in landscape orientation.
-  tft.fillRect(0, 0, TFT_W, TFT_H, WHITE);
+  tft.fillRect(0, 0, TFT_W, TFT_H, BACK_GROUD_COLOR );
 }
 
 //---------------------
 //Video display of the data: Date, Hour, NEO1 and NEO2 details
 void printDisplay(){
+ 
   static char outstr[15];
   getLocalTime(&timeinfo);
   tft.setCursor(3,18);
   tft.setTextSize(1);
-  tft.setTextColor(BLUE,WHITE);
+  tft.setTextColor(DATE_COLOR,DATE_COLOR_BKG);
   tft.println(&timeinfo, "  %A, %d %B");
   tft.setTextSize(1);
   tft.println("");
-  tft.setTextColor(BLACK,WHITE);
+  tft.setTextColor(TIME_COLOR,TIME_COLOR_BKG);
   tft.print("  ");
   tft.setTextSize(3);
   tft.println(&timeinfo," %H:%M");
   tft.setTextSize(1);
   tft.println("");
-  tft.setTextColor(BLUE);
-  tft.print ("   Name > ");
-  tft.setTextColor(BLACK);
+  tft.setTextColor(TXT_ITEM_NEO_COLOR);
+  tft.print ("   Name : ");
+  tft.setTextColor(TXT_VALUE_NEO_COLOR);
   tft.println(NEO1name);
-  tft.setTextColor(BLUE);
-  tft.print ("   Date > ");
-  tft.setTextColor(BLACK);
+  tft.setTextColor(TXT_ITEM_NEO_COLOR);
+  tft.print ("   Date : ");
+  tft.setTextColor(TXT_VALUE_NEO_COLOR);
   tft.println(NEO1date);
-  tft.setTextColor (BLUE);
-  tft.print("   Dis  > ");
-  tft.setTextColor(BLACK);
+  tft.setTextColor (TXT_ITEM_NEO_COLOR);
+  tft.print("   Dis  : ");
+  tft.setTextColor(TXT_VALUE_NEO_COLOR);
   dtostrf(NEO1distanceFLoat,9, 1, outstr);
   tft.print(outstr);
   tft.println(" Km");
   
   tft.println("");
 
-  tft.setTextColor(BLUE);
-  tft.print ("   Name > ");
-  tft.setTextColor(BLACK);
+  tft.setTextColor(TXT_ITEM_NEO_COLOR);
+  tft.print ("   Name : ");
+  tft.setTextColor(TXT_VALUE_NEO_COLOR);
   tft.println(NEO2name);
-  tft.setTextColor(BLUE);
-  tft.print ("   Date > ");
-  tft.setTextColor(BLACK);
+  tft.setTextColor(TXT_ITEM_NEO_COLOR);
+  tft.print ("   Date : ");
+  tft.setTextColor(TXT_VALUE_NEO_COLOR);
   tft.println(NEO2date);
-  tft.setTextColor (BLUE);
-  tft.print("   Dis  > ");
-  tft.setTextColor(BLACK);
+  tft.setTextColor (TXT_ITEM_NEO_COLOR);
+  tft.print("   Dis  : ");
+  tft.setTextColor(TXT_VALUE_NEO_COLOR);
   dtostrf(NEO2distanceFLoat,9, 1, outstr);
   tft.print(outstr);
   tft.println(" Km");
   
-  tft.drawRect(2,2,TFT_W-4,TFT_H-4,BLACK);
-  tft.fillRect(2,2,TFT_W-5,12,DGRAY);
+  tft.drawRect(2,2,TFT_W-4,TFT_H-4,RIBBON_COLOR);
+  tft.fillRect(2,2,TFT_W-5,12,RIBBON_BORDER);
   tft.setCursor((TFT_W/2)-17,5);
-  tft.setTextColor(WHITE);
+  tft.setTextColor(NEOWATCH_COLOR);
   tft.print("NEOWATCH    ");
-  tft.setTextColor(GREEN);
-  tft.print("V1");
+  tft.setTextColor(VERSION_COLOR);
+  tft.print("V2");
   
   timeStampOLD = timeStamp;
 }
